@@ -1,0 +1,6 @@
+# terraform init -backend-config="dev.s3.tf.backend" -migrate-stateで以下の設定を適用
+
+bucket = "terraform-state-20260915-a7f3c91e"
+key = "04-backends/prod/state.tfstate"
+use_lockfile = true
+region = "eu-west-1"
