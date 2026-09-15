@@ -26,6 +26,15 @@ State...設定ファイルのリソースを現実のリソースと対応づけ
 - Stateに書き込まれているときは、競合が起きないようにロックできる
 */
 
+/*
+Backendについて
+
+Backend...Stateファイルをどこに保存するかを定めるもの.以下の３種類がある。
+- Local...ローカルのプロジェクトと同じ場所に保存される。
+- HCP Terraform...Terraformが提供するリモートバックエンド。さまざまな機能がある。
+- Third party remote backend...S3やGoogle Cloud Storageなど
+*/
+
 terraform {
   required_version = ">= 1.7.0"
   required_providers {
