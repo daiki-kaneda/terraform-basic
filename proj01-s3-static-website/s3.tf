@@ -14,20 +14,22 @@ resource "aws_s3_bucket_public_access_block" "static_website" {
   restrict_public_buckets = false
 }
 
+data "aws_iam_policy_document" "static_website_public_read" {
+  statement {
+    sid       = "PublicReadGetObject"
+    effect    = "Allow"
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.static_website.arn}/*"]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "static_website_public_read" {
   bucket = aws_s3_bucket.static_website.id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.static_website.arn}/*"
-      }
-    ]
-  })
+  policy = data.aws_iam_policy_document.static_website_public_read.json
 }
 
 resource "aws_s3_bucket_website_configuration" "static_website" {
@@ -43,16 +45,16 @@ resource "aws_s3_bucket_website_configuration" "static_website" {
 }
 
 resource "aws_s3_object" "index_html" {
-    bucket = aws_s3_bucket.static_website.id
-    key = "index.html"
-    source = "build/index.html"
-    etag = filemd5("build/index.html")
-    content_type = "text/html"
+  bucket       = aws_s3_bucket.static_website.id
+  key          = "index.html"
+  source       = "build/index.html"
+  etag         = filemd5("build/index.html")
+  content_type = "text/html"
 }
 resource "aws_s3_object" "error_html" {
-    bucket = aws_s3_bucket.static_website.id
-    key = "error.html"
-    source = "build/error.html"
-    etag = filemd5("build/index.html")
-    content_type = "text/html"
+  bucket       = aws_s3_bucket.static_website.id
+  key          = "error.html"
+  source       = "build/error.html"
+  etag         = filemd5("build/index.html")
+  content_type = "text/html"
 }
